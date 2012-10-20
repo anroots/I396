@@ -1,5 +1,7 @@
 package ee.itcollege.i396.ex2;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class LinkedSet {
@@ -62,13 +64,71 @@ public class LinkedSet {
 		}
 	}
 	
-	public Boolean containsAll(List<Object> objs) {
+	public boolean containsAll(List<Object> objs) {
 		for (Object o : objs) {
 			if (!this.contains(o)) {
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	public boolean removeAll(List<Object> list) {
+		if (head.next == null) {
+			throw new IllegalStateException();
+		}
+		if (list == null) {
+			throw new NullPointerException();
+		}
+		
+		boolean modified = false;
+
+		for (Object o : list) {
+			if (this.contains(o)) {
+				this.remove(o);
+				modified = true;
+			}
+		}
+		
+		return modified;
+	}
+	
+	public boolean retainAll(List<Object> list) {
+		if (head.next == null) {
+			throw new IllegalStateException();
+		}
+		if (list == null) {
+			throw new NullPointerException();
+		}
+		boolean modified = false;
+		Node run = head.next;
+		
+		while (run != null) {
+			boolean contains = false;
+			for (Object o : list) {
+				if (run.data.equals(o)) {
+					contains = true;
+				}
+			}
+			if (!contains) {
+				this.remove(run.data);
+				modified = true;
+			}
+			run = run.next;
+		}
+		
+		return modified;
+	}
+	
+	public List<Object> asList() {
+		ArrayList<Object> list = new ArrayList<Object>();
+		Node run = head.next;
+		
+		while (run != null) {
+			list.add(run.data);
+			run = run.next;
+		}
+		return list;
 	}
 	
 	private class Node
