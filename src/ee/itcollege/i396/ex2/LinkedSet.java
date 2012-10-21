@@ -1,7 +1,6 @@
 package ee.itcollege.i396.ex2;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class LinkedSet {
@@ -60,45 +59,47 @@ public class LinkedSet {
 				}
 				return;
 			}
-
+			run = run.next;
 		}
 	}
 
 	public boolean removeAll(List<Object> list) {
+		if (head.next == null) {
+			throw new IllegalStateException();
+		}
+		boolean modified = false;
+
+		for (Object o : list) {
+			if (this.contains(o)) {
+				this.remove(o);
+				modified = true;
+			}
+		}
+		return modified;
+	}
+
+	public boolean retainAll(List<Object> inputList) {
 		Node run = head.next;
 		if (run == null) {
 			throw new IllegalStateException();
 		}
+		boolean modified = false;
 
 		while (run != null) {
-			for (Object o : list) {
+			boolean contains = false;
+			for (Object o : inputList) {
 				if (run.data.equals(o)) {
-					run.previous.next = run.next;
-					if (run.next != null) {
-						run.next.previous = run.previous;
-					}
+					contains = true;
 				}
+			}
+			if (!contains) {
+				this.remove(run.data);
+				modified = true;
 			}
 			run = run.next;
 		}
-		return true;
-	}
-
-	public boolean retainAll(List<Object> inputList) {
-		if (inputList.size() < 1 || size() < 1) {
-			return false;
-		}
-
-		Iterator<Object> looper = asList().iterator();
-
-		while (looper.hasNext()) {
-			Object currentItem = looper.next();
-			if (!inputList.contains(currentItem)) {
-				remove(currentItem);
-			}
-			System.out.print("next\n");
-		}
-		return true;
+		
+		return modified;
 	}
 
 	public List<Object> asList() {
