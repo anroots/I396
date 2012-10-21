@@ -58,7 +58,7 @@ public class LinkedSet {
 				}
 				return;
 			}
-			run = run.next;
+			
 		}
 	}
 	

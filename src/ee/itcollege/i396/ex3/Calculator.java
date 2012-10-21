@@ -62,7 +62,7 @@ public class Calculator {
 	 * Number of bats on the field.
 	 */
 	private int batsOnField = NUMBER_OF_BATS_ON_FIELD;
-	
+
 	public Calculator() {
 
 	}
@@ -144,7 +144,7 @@ public class Calculator {
 	}
 
 	private boolean isFieldEmpty() {
-		 return batsOnField == 0;
+		return batsOnField == 0;
 	}
 
 	public boolean lastFrameWasSpare() {
