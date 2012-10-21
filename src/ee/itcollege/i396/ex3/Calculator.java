@@ -158,6 +158,8 @@ public class Calculator {
 		roll = 0;
 		frame = 1;
 		score = 0;
+		currentFramePoints.clear();
+		framePointsHistory.clear();
 	}
 
 	private boolean isGameOver() {

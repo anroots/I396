@@ -80,6 +80,15 @@ public class CalculatorTest {
 		calc.hit(6);
 		assertThat(calc.getScore(), is(28));
 	}
+	
+	@Test
+	public void testResetGame() throws GameOverException {
+		rollBall(13, 2);
+		calc.resetGame();
+		assertThat(calc.getScore(), is(0));
+		assertThat(calc.getFrame(),is(1));
+		assertThat(calc.getRoll(),is(0));
+	}
 
 	@Test
 	public void testNormalGameYieldsExpectedPoints() throws GameOverException {
