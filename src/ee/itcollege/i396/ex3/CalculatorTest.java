@@ -2,8 +2,6 @@ package ee.itcollege.i396.ex3;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
@@ -20,19 +18,15 @@ public class CalculatorTest {
 	@Test
 	public void testSingleHitsAreRecorded() {
 
-		for (int i = 0; i < 20; i++) {
-			calc.hit(1);
-		}
+		rollBall(20, 1);
 
 		assertThat(calc.getScore(), is(20));
 	}
 
 	@Test
 	public void testDoubleHitsAreRecorded() {
-		for (int i = 0; i < 20; i++) {
-			calc.hit(2);
-		}
-
+		rollBall(20,2);
+		
 		assertThat(calc.getScore(), is(40));
 	}
 
@@ -40,10 +34,9 @@ public class CalculatorTest {
 	public void testLastFrameHasThreeHits() {
 
 		calc.setFrame(10);
-
-		calc.hit(1);
-		calc.hit(1);
-		calc.hit(1);
+		
+		rollBall(3,1);
+		
 		assertThat(calc.getFrame(), is(10));
 		assertThat(calc.getScore(), is(3));
 		assertThat(calc.getRoll(), is(3));
@@ -51,18 +44,13 @@ public class CalculatorTest {
 
 	@Test
 	public void testTwentyOneHitsArePossible() {
-		for (int i = 0; i < 21; i++) {
-			calc.hit(1);
-		}
-
+		rollBall(21,1);
 		assertThat(calc.getScore(), is(21));
 	}
 
 	@Test
 	public void testGameResets() {
-		for (int i = 0; i < 22; i++) {
-			calc.hit(1);
-		}
+		rollBall(22,1);
 		assertThat(calc.getScore(), is(1));
 	}
 
@@ -72,4 +60,17 @@ public class CalculatorTest {
 	 * 
 	 * assertThat(calc.getScore(), is(150)); }
 	 */
+	
+	/**
+	 * Helper method for rolling the bowling ball.
+	 * Each roll hits the same number of bats.
+	 * 
+	 * @param times How many times to roll the ball?
+	 * @param hit How many bats to hit with each roll?
+	 */
+	private void rollBall(int times,int hit){
+		for (int i = 0; i < times; i++) {
+			calc.hit(hit);
+		}
+	}
 }
