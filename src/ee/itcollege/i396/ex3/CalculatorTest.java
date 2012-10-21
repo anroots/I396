@@ -54,11 +54,22 @@ public class CalculatorTest {
 	}
 
 	@Test
-	public void testSpareHitsAddNextPoints() throws GameOverException {
-
-		rollBall(21, 5);
-		// assertThat(calc.getScore(), is(150));
+	public void testFrameIsSpare() throws GameOverException {
+		rollBall(2, 5);
+		assertTrue(calc.lastFrameWasSpare());
 	}
+
+	@Test
+	public void testFrameIsNotSpare() throws GameOverException {
+		rollBall(2, 4);
+		assertFalse(calc.lastFrameWasSpare());
+	}
+
+	/*
+	 * @Test public void testSpareHitsAddNextPoints() throws GameOverException {
+	 * 
+	 * rollBall(21, 5); assertThat(calc.getScore(), is(150)); }
+	 */
 
 	/**
 	 * Helper method for rolling the bowling ball. Each roll hits the same
