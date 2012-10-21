@@ -136,32 +136,34 @@ public class CalculatorTest {
 		addFrame(3, 5);
 		assertThat(calc.getScore(), is(8));
 
-		addFrame(5, 5);
-		assertThat(calc.getScore(), is(18));
+		addFrame(5, 4);
+		assertThat(calc.getScore(), is(17));
 
 		addFrame(2, 5);
-		assertThat(calc.getScore(), is(27));
+		assertThat(calc.getScore(), is(24));
 		assertEquals(calc.getFrame(), 3);
 		assertEquals(calc.getRoll(), 2);
 
-		// Todo
 		addFrame(10);
-		assertThat(calc.getScore(), is(37));
-		assertEquals(calc.getFrame(), 4);
-		assertEquals(calc.getRoll(), 1);
+		assertThat(calc.getScore(), is(34));
 
-		addFrame(2, 8);
-		assertThat(calc.getScore(), is(8));
-		addFrame(10);
-		assertThat(calc.getScore(), is(8));
-		addFrame(5, 2);
-		assertThat(calc.getScore(), is(8));
-		addFrame(7, 1);
-		assertThat(calc.getScore(), is(8));
-		addFrame(3, 7);
-		assertThat(calc.getScore(), is(8));
-		addFrame(10, 7, 3);
-		assertThat(calc.getScore(), is(139));
+		addFrame(2, 1);
+		assertThat(calc.getScore(), is(40));
+		
+		addFrame(2,3);
+		assertThat(calc.getScore(), is(42));
+		
+		addFrame(1, 3);
+		assertThat(calc.getScore(), is(46));
+		
+		addFrame(2, 1);
+		assertThat(calc.getScore(), is(49));
+		
+		addFrame(4, 4);
+		assertThat(calc.getScore(), is(57));
+		
+		addFrame(1,4,0);
+		assertThat(calc.getScore(), is(62));
 	}
 
 	private void addFrame(int roll1, int roll2) throws GameOverException {
