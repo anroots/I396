@@ -56,13 +56,13 @@ public class CalculatorTest {
 	@Test
 	public void testFrameIsSpare() throws GameOverException {
 		rollBall(2, 5);
-		assertTrue(calc.lastFrameWasSpare());
+		assertTrue(calc.currentFrameIsSpare());
 	}
 
 	@Test
 	public void testFrameIsNotSpare() throws GameOverException {
 		rollBall(2, 4);
-		assertFalse(calc.lastFrameWasSpare());
+		assertFalse(calc.currentFrameIsSpare());
 	}
 
 	@Test
@@ -71,6 +71,21 @@ public class CalculatorTest {
 		calc.hit(3); // It's a spare!
 		calc.hit(2);
 		assertThat(calc.getScore(), is(14)); // (10 + 2) + 2
+	}
+
+	@Test
+	public void testSpareHitAddsOnlyFirstRoll() throws GameOverException {
+		calc.hit(5);
+		calc.hit(5);
+		assertEquals(calc.getFrame(), 1);
+
+		// It's a spare, but we're still in the spare frame
+
+		calc.hit(2); // We're on the next frame
+		assertEquals(calc.getFrame(), 2);
+		calc.hit(4); // Still on the next frame
+		assertEquals(calc.getFrame(), 2);
+		assertThat(calc.getScore(), is(18));
 	}
 
 	@Test
@@ -84,12 +99,16 @@ public class CalculatorTest {
 		calc.hit(10);
 		calc.hit(2);
 		assertTrue(calc.lastFrameWasStrike());
+		calc.hit(1);
+		assertTrue(calc.lastFrameWasStrike());
+		calc.hit(1);
+		assertFalse(calc.lastFrameWasStrike());
 	}
 
 	@Test
 	public void testStrikeIsNotSpare() throws GameOverException {
 		calc.hit(10);
-		assertFalse(calc.lastFrameWasSpare());
+		assertFalse(calc.currentFrameIsSpare());
 		assertTrue(calc.lastFrameWasStrike());
 	}
 
@@ -99,7 +118,7 @@ public class CalculatorTest {
 		calc.hit(1);
 		assertThat(calc.getScore(), is(12));
 		calc.hit(2);
-		assertThat(calc.getFinalScore(), is(16)); // (10 + 1 + 2) + 1 + 2
+		assertThat(calc.getScore(), is(16)); // (10 + 1 + 2) + 1 + 2
 	}
 
 	@Test
@@ -113,18 +132,35 @@ public class CalculatorTest {
 
 	@Test
 	public void testNormalGameYieldsExpectedPoints() throws GameOverException {
-		fail("Todo");
-		addFrame(3, 5);
-		addFrame(5, 5);
-		addFrame(2, 5);
-		addFrame(10);
-		addFrame(2, 8);
-		addFrame(10);
-		addFrame(5, 2);
-		addFrame(7, 1);
-		addFrame(3, 7);
-		addFrame(10, 7, 3);
 
+		addFrame(3, 5);
+		assertThat(calc.getScore(), is(8));
+
+		addFrame(5, 5);
+		assertThat(calc.getScore(), is(18));
+
+		addFrame(2, 5);
+		assertThat(calc.getScore(), is(27));
+		assertEquals(calc.getFrame(), 3);
+		assertEquals(calc.getRoll(), 2);
+
+		// Todo
+		addFrame(10);
+		assertThat(calc.getScore(), is(37));
+		assertEquals(calc.getFrame(), 4);
+		assertEquals(calc.getRoll(), 1);
+
+		addFrame(2, 8);
+		assertThat(calc.getScore(), is(8));
+		addFrame(10);
+		assertThat(calc.getScore(), is(8));
+		addFrame(5, 2);
+		assertThat(calc.getScore(), is(8));
+		addFrame(7, 1);
+		assertThat(calc.getScore(), is(8));
+		addFrame(3, 7);
+		assertThat(calc.getScore(), is(8));
+		addFrame(10, 7, 3);
 		assertThat(calc.getScore(), is(139));
 	}
 
