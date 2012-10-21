@@ -74,11 +74,32 @@ public class CalculatorTest {
 	}
 
 	@Test
-	public void testStrike() throws GameOverException {
+	public void testStrikeSkipsToNextFrame() throws GameOverException {
 		calc.hit(10);
-		calc.hit(3);
-		calc.hit(6);
-		assertThat(calc.getScore(), is(28));
+		assertEquals(calc.getFrame(), 2);
+	}
+
+	@Test
+	public void testLastFrameWasStrike() throws GameOverException {
+		calc.hit(10);
+		calc.hit(2);
+		assertTrue(calc.lastFrameWasStrike());
+	}
+
+	@Test
+	public void testStrikeIsNotSpare() throws GameOverException {
+		calc.hit(10);
+		assertFalse(calc.lastFrameWasSpare());
+		assertTrue(calc.lastFrameWasStrike());
+	}
+
+	@Test
+	public void testStrikeYieldsAdditionalPoints() throws GameOverException {
+		calc.hit(10); // Strike
+		calc.hit(1);
+		assertThat(calc.getScore(), is(12));
+		calc.hit(2);
+		assertThat(calc.getFinalScore(), is(16)); // (10 + 1 + 2) + 1 + 2
 	}
 
 	@Test

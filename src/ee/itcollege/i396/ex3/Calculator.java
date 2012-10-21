@@ -123,21 +123,35 @@ public class Calculator {
 	}
 
 	private int getFrameBonus() {
-		if (!lastFrameWasSpare()) {
-			return 0;
-		} else {
+
+		if (lastFrameWasSpare()) {
 			// Spare: next throw after the spare-frame eq the first throw of the
 			// current frame
 			return currentFramePoints.get(0);
 		}
+
+		if (lastFrameWasStrike()) {
+			return getCurrentFramePointsSum();
+		}
+
+		return 0;
+	}
+
+	public int getFinalScore() {
+		moveToNextFrame();
+		return score;
 	}
 
 	private int getFrameScore() {
+		return getCurrentFramePointsSum() + getFrameBonus();
+	}
+
+	private int getCurrentFramePointsSum() {
 		int frameScore = 0;
 		for (int i = 0; i < currentFramePoints.size(); i++) {
 			frameScore += currentFramePoints.get(i);
 		}
-		return frameScore + getFrameBonus();
+		return frameScore;
 	}
 
 	private boolean isFrameOver() {
@@ -159,13 +173,13 @@ public class Calculator {
 	 * @return
 	 */
 	public boolean lastFrameWasSpare() {
-		if (getLastFrame() == null) {
+		if (getPrevFrame() == null || getPrevFrame().size() < 2) {
 			return false;
 		}
-		return getLastFrame().get(0) + getLastFrame().get(1) == NUMBER_OF_PINS_ON_FIELD;
+		return getPrevFrame().get(0) + getPrevFrame().get(1) == NUMBER_OF_PINS_ON_FIELD;
 	}
 
-	public List<Integer> getLastFrame() {
+	public List<Integer> getPrevFrame() {
 		// -2: Frames start from 1 (but list starts from 0), + we want the
 		// previous frame
 		try {
@@ -185,6 +199,13 @@ public class Calculator {
 
 	private boolean isGameOver() {
 		return frame == MAX_FRAMES && roll == MAX_ROLLS_IN_LAST_FRAME;
+	}
+
+	public boolean lastFrameWasStrike() {
+		if (getPrevFrame() == null || getPrevFrame().size() != 1) {
+			return false;
+		}
+		return getPrevFrame().get(0) == NUMBER_OF_PINS_ON_FIELD;
 	}
 
 }
