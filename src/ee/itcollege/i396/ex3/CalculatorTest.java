@@ -130,6 +130,7 @@ public class CalculatorTest {
 		assertThat(calc.getRoll(), is(0));
 	}
 
+	// Todo: add more sample games
 	@Test
 	public void testNormalGameYieldsExpectedPoints() throws GameOverException {
 
@@ -149,20 +150,20 @@ public class CalculatorTest {
 
 		addFrame(2, 1);
 		assertThat(calc.getScore(), is(40));
-		
-		addFrame(2,3);
+
+		addFrame(2, 3);
 		assertThat(calc.getScore(), is(42));
-		
+
 		addFrame(1, 3);
 		assertThat(calc.getScore(), is(46));
-		
+
 		addFrame(2, 1);
 		assertThat(calc.getScore(), is(49));
-		
+
 		addFrame(4, 4);
 		assertThat(calc.getScore(), is(57));
-		
-		addFrame(1,4,0);
+
+		addFrame(1, 4, 0);
 		assertThat(calc.getScore(), is(62));
 	}
 

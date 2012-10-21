@@ -1,6 +1,7 @@
 package ee.itcollege.i396.ex2;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class LinkedSet {
@@ -78,12 +79,26 @@ public class LinkedSet {
 					}
 				}
 			}
+			run = run.next;
 		}
-		return false;
+		return true;
 	}
 
-	public boolean retainAll(List<Object> list) {
-		return false;// todo
+	public boolean retainAll(List<Object> inputList) {
+		if (inputList.size() < 1 || size() < 1) {
+			return false;
+		}
+
+		Iterator<Object> looper = asList().iterator();
+
+		while (looper.hasNext()) {
+			Object currentItem = looper.next();
+			if (!inputList.contains(currentItem)) {
+				remove(currentItem);
+			}
+			System.out.print("next\n");
+		}
+		return true;
 	}
 
 	public List<Object> asList() {
