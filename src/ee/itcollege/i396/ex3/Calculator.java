@@ -21,15 +21,9 @@ public class Calculator {
 	public static final int MAX_ROLLS_IN_LAST_FRAME = 3;
 
 	/**
-	 * Ten pin bowling - number of bats
+	 * Ten pin bowling - number of pins
 	 */
-	public static final int NUMBER_OF_BATS_ON_FIELD = 10;
-
-	/**
-	 * How many bats must be hit in first and second roll for the frame to be
-	 * called a "Spare"
-	 */
-	private static final Integer SPARE_HIT_COUNT = 5;
+	public static final int NUMBER_OF_PINS_ON_FIELD = 10;
 
 	/**
 	 * Player's total score
@@ -59,9 +53,9 @@ public class Calculator {
 	private int roll = 0;
 
 	/**
-	 * Number of bats on the field.
+	 * Number of pins on the field.
 	 */
-	private int batsOnField = NUMBER_OF_BATS_ON_FIELD;
+	private int pinsOnField = NUMBER_OF_PINS_ON_FIELD;
 
 	public Calculator() {
 
@@ -100,13 +94,13 @@ public class Calculator {
 	public void hit(int i) throws GameOverException {
 
 		if (isGameOver()) {
-			// We tried to hit more bats when the game is already over
+			// We tried to hit more pins when the game is already over
 			throw new GameOverException();
 		}
 
 		currentFramePoints.add(i);
 		roll += 1;
-		batsOnField -= i;
+		pinsOnField -= i;
 
 		if (isFrameOver()) {
 			moveToNextFrame();
@@ -117,14 +111,25 @@ public class Calculator {
 	private void moveToNextFrame() {
 		frame += 1; // Move to next frame
 		roll = 0; // Reset current roll number
-		score += getFrameScore(); // Add frame score to total score
+		score += getFrameScore() + getFrameBonus(); // Add frame score to total
+													// score
 		framePointsHistory.add(new ArrayList<Integer>(currentFramePoints)); // Save
 																			// frame
 																			// hits
 																			// to
 																			// history
 		currentFramePoints.clear(); // Reset frame hits for the next frame
-		batsOnField = NUMBER_OF_BATS_ON_FIELD;
+		pinsOnField = NUMBER_OF_PINS_ON_FIELD;
+	}
+
+	private int getFrameBonus() {
+		if (!lastFrameWasSpare()) {
+			return 0;
+		} else {
+			// Spare: next throw after the spare-frame eq the first throw of the
+			// current frame
+			return currentFramePoints.get(0);
+		}
 	}
 
 	private int getFrameScore() {
@@ -132,7 +137,7 @@ public class Calculator {
 		for (int i = 0; i < currentFramePoints.size(); i++) {
 			frameScore += currentFramePoints.get(i);
 		}
-		return frameScore;
+		return frameScore + getFrameBonus();
 	}
 
 	private boolean isFrameOver() {
@@ -144,14 +149,30 @@ public class Calculator {
 	}
 
 	private boolean isFieldEmpty() {
-		return batsOnField == 0;
+		return pinsOnField == 0;
 	}
 
+	/**
+	 * The first and second rolls of the last frame managed to get all the pins
+	 * on the field
+	 * 
+	 * @return
+	 */
 	public boolean lastFrameWasSpare() {
+		if (getLastFrame() == null) {
+			return false;
+		}
+		return getLastFrame().get(0) + getLastFrame().get(1) == NUMBER_OF_PINS_ON_FIELD;
+	}
+
+	public List<Integer> getLastFrame() {
 		// -2: Frames start from 1 (but list starts from 0), + we want the
 		// previous frame
-		return framePointsHistory.get(frame - 2).get(0) == SPARE_HIT_COUNT
-				&& framePointsHistory.get(frame - 2).get(1) == SPARE_HIT_COUNT;
+		try {
+			return framePointsHistory.get(frame - 2);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	public void resetGame() {

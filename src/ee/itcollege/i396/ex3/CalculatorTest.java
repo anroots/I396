@@ -66,11 +66,11 @@ public class CalculatorTest {
 	}
 
 	@Test
-	public void testSpareHitsAddNextPoints() throws GameOverException {
-
-		fail("Todo, requirements are confusing.");
-		// rollBall(21, 5);
-		// assertThat(calc.getScore(), is(150));
+	public void testSpareHitAddsNextThrowPoints() throws GameOverException {
+		calc.hit(7);
+		calc.hit(3); // It's a spare!
+		calc.hit(2);
+		assertThat(calc.getScore(), is(14)); // (10 + 2) + 2
 	}
 
 	@Test
@@ -80,14 +80,14 @@ public class CalculatorTest {
 		calc.hit(6);
 		assertThat(calc.getScore(), is(28));
 	}
-	
+
 	@Test
 	public void testResetGame() throws GameOverException {
 		rollBall(13, 2);
 		calc.resetGame();
 		assertThat(calc.getScore(), is(0));
-		assertThat(calc.getFrame(),is(1));
-		assertThat(calc.getRoll(),is(0));
+		assertThat(calc.getFrame(), is(1));
+		assertThat(calc.getRoll(), is(0));
 	}
 
 	@Test
