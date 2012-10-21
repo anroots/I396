@@ -21,6 +21,11 @@ public class Calculator {
 	public static final int MAX_ROLLS_IN_LAST_FRAME = 3;
 
 	/**
+	 * Ten pin bowling - number of bats
+	 */
+	public static final int NUMBER_OF_BATS_ON_FIELD = 10;
+
+	/**
 	 * How many bats must be hit in first and second roll for the frame to be
 	 * called a "Spare"
 	 */
@@ -53,6 +58,11 @@ public class Calculator {
 	 */
 	private int roll = 0;
 
+	/**
+	 * Number of bats on the field.
+	 */
+	private int batsOnField = NUMBER_OF_BATS_ON_FIELD;
+	
 	public Calculator() {
 
 	}
@@ -96,6 +106,7 @@ public class Calculator {
 
 		currentFramePoints.add(i);
 		roll += 1;
+		batsOnField -= i;
 
 		if (isFrameOver()) {
 			moveToNextFrame();
@@ -113,6 +124,7 @@ public class Calculator {
 																			// to
 																			// history
 		currentFramePoints.clear(); // Reset frame hits for the next frame
+		batsOnField = NUMBER_OF_BATS_ON_FIELD;
 	}
 
 	private int getFrameScore() {
@@ -124,7 +136,15 @@ public class Calculator {
 	}
 
 	private boolean isFrameOver() {
-		return !isGameOver() && roll == MAX_ROLLS && frame < MAX_FRAMES;
+		return (!isGameOver() && !hasMoreRolls()) || isFieldEmpty();
+	}
+
+	private boolean hasMoreRolls() {
+		return !(roll == MAX_ROLLS && frame < MAX_FRAMES);
+	}
+
+	private boolean isFieldEmpty() {
+		 return batsOnField == 0;
 	}
 
 	public boolean lastFrameWasSpare() {

@@ -65,11 +65,54 @@ public class CalculatorTest {
 		assertFalse(calc.lastFrameWasSpare());
 	}
 
-	/*
-	 * @Test public void testSpareHitsAddNextPoints() throws GameOverException {
-	 * 
-	 * rollBall(21, 5); assertThat(calc.getScore(), is(150)); }
-	 */
+	@Test
+	public void testSpareHitsAddNextPoints() throws GameOverException {
+
+		fail("Todo, requirements are confusing.");
+		// rollBall(21, 5);
+		// assertThat(calc.getScore(), is(150));
+	}
+
+	@Test
+	public void testStrike() throws GameOverException {
+		calc.hit(10);
+		calc.hit(3);
+		calc.hit(6);
+		assertThat(calc.getScore(), is(28));
+	}
+
+	@Test
+	public void testNormalGameYieldsExpectedPoints() throws GameOverException {
+		fail("Todo");
+		addFrame(3, 5);
+		addFrame(5, 5);
+		addFrame(2, 5);
+		addFrame(10);
+		addFrame(2, 8);
+		addFrame(10);
+		addFrame(5, 2);
+		addFrame(7, 1);
+		addFrame(3, 7);
+		addFrame(10, 7, 3);
+
+		assertThat(calc.getScore(), is(139));
+	}
+
+	private void addFrame(int roll1, int roll2) throws GameOverException {
+		calc.hit(roll1);
+		calc.hit(roll2);
+	}
+
+	private void addFrame(int roll1, int roll2, int roll3)
+			throws GameOverException {
+		calc.hit(roll1);
+		calc.hit(roll2);
+		calc.hit(roll3);
+	}
+
+	private void addFrame(int roll1) throws GameOverException {
+		calc.hit(roll1);
+	}
 
 	/**
 	 * Helper method for rolling the bowling ball. Each roll hits the same
