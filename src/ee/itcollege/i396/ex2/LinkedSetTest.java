@@ -1,6 +1,7 @@
 package ee.itcollege.i396.ex2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -57,7 +58,6 @@ public class LinkedSetTest {
 		assertThat(ls.size(), is(0));
 	}
 
-
 	@Test
 	public void removeSizeIsCorrect() {
 		LinkedSet ls = new LinkedSet();
@@ -101,4 +101,42 @@ public class LinkedSetTest {
 		assertTrue(ls.containsAll(list));
 	}
 
+	@Test
+	public void inputIsReturnedAsListInOrder() {
+		LinkedSet ls = new LinkedSet();
+		ls.add(2);
+		ls.add(1);
+		ls.add(6);
+
+		List<Object> returned = ls.asList();
+
+		assertEquals(2, returned.get(0));
+		assertEquals(1, returned.get(1));
+		assertEquals(6, returned.get(2));
+	}
+
+	@Test
+	public void removeAllDeletesSpecified() {
+		LinkedSet ls = new LinkedSet();
+		ls.add(5);
+		ls.add(1);
+		ls.add(2);
+		ls.add(4);
+
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(1);
+		list.add(2);
+
+		ls.removeAll(list);
+
+		assertFalse(ls.contains(1));
+		assertFalse(ls.contains(2));
+		assertTrue(ls.contains(4));
+
+	}
+
+	@Test
+	public void retainAllErasesNotSpecifiedMembers() {
+		fail("Todo");
+	}
 }
