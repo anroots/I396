@@ -19,13 +19,19 @@ public class Calculator {
 	 */
 	private ArrayList<Frame> frames = new ArrayList<Frame>();
 
-	private boolean gameIsOver = false;
+	private boolean gameIsOver;
 
 	/**
 	 * Current Frame Number
 	 */
-	private int frameIndex = 0;
+	private int frameIndex;
 
+	public Calculator() {
+		frameIndex = 0;
+		gameIsOver = false;
+		frames.add(new Frame());
+	}
+	
 	public ArrayList<Frame> getFrames() {
 		return frames;
 	}
@@ -41,10 +47,6 @@ public class Calculator {
 
 	private boolean isGameOver() {
 		return gameIsOver;
-	}
-
-	public Calculator() {
-		frames.add(new Frame());
 	}
 
 	public int getScore() {

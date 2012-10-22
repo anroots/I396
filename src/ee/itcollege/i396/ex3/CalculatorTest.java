@@ -110,6 +110,13 @@ public class CalculatorTest {
 		assertThat(calc.getScore(), is(150));
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void inCorrectSequenceThrows() throws GameOverException {
+		Calculator calc = new Calculator();
+		calc.hit(1);
+		calc.hit(10);
+	}
+	
 	@Test
 	public void testNormalGameYieldsExpectedPoints() throws GameOverException {
 		Calculator calc = new Calculator();
