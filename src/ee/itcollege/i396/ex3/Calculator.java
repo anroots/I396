@@ -86,10 +86,6 @@ public class Calculator {
 	}
 
 	private void addFinalBonus(int hit) throws GameOverException {
-		if (isGameOver()) {
-			throw new GameOverException();
-		}
-
 		frames.get(getFrameIndex() - 1).addBonus(hit);
 		setFrameIndex(getFrameIndex() + 1);
 	}
@@ -138,11 +134,15 @@ public class Calculator {
 
 		public void hit(int hit) {
 			if (hit1 == 0) {
+				if (hit > PINS_ON_FIELD) {
+					throw new IllegalStateException();
+				}
 				hit1 = hit;
-			} else if (hit <= PINS_ON_FIELD - hit1) {
-				hit2 = hit;
 			} else {
-				throw new IllegalStateException();
+				if (hit > PINS_ON_FIELD - hit1) {
+					throw new IllegalStateException();
+				}
+				hit2 = hit;
 			}
 		}
 

@@ -2,6 +2,8 @@ package ee.itcollege.i396.ex3;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import ee.itcollege.i396.ex3.Calculator.GameOverException;
@@ -144,6 +146,21 @@ public class CalculatorTest {
 		assertThat(calc.getScore(), is(139));
 	}
 
+	// Tries to hit more pins than are on the field with the first hit
+	@Test(expected = IllegalStateException.class)
+	public void firstHitIsGreaterThanPossibleThrows() throws IllegalStateException, GameOverException{
+		Calculator calc = new Calculator();
+		calc.hit(Calculator.PINS_ON_FIELD + 1);
+	}
+	
+	// Tries to hit more pins than are on the field with the second hit
+	@Test(expected = IllegalStateException.class)
+	public void secondHitIsGreaterThanPossibleThrows() throws IllegalStateException, GameOverException{
+		Calculator calc = new Calculator();
+		calc.hit(1);
+		calc.hit(Calculator.PINS_ON_FIELD);
+	}
+	
 	@Test(expected = GameOverException.class)
 	public void tooManyScoresThrows() throws GameOverException {
 		Calculator calc = new Calculator();
@@ -151,6 +168,26 @@ public class CalculatorTest {
 		rollBall(calc, Calculator.NUMBER_OF_FRAMES_IN_GAME * 2 + 3, 2);
 	}
 
+	@Test
+	public void canHitMoreWhenStrikeIsFalse() throws GameOverException {
+		Calculator calc = new Calculator();
+		calc.hit(Calculator.NUMBER_OF_FRAMES_IN_GAME);
+		ArrayList<Calculator.Frame> frames = calc.getFrames();
+		Calculator.Frame frame = frames.get(0);
+		assertFalse(frame.canHitMore());
+	}
+	
+
+	@Test
+	public void canHitMoreWhenSpareIsTrue() throws GameOverException {
+		Calculator calc = new Calculator();
+		calc.hit(Calculator.NUMBER_OF_FRAMES_IN_GAME / 2);
+		ArrayList<Calculator.Frame> frames = calc.getFrames();
+		Calculator.Frame frame = frames.get(0);
+		assertTrue(frame.canHitMore());
+	}
+
+	
 	/**
 	 * Helper method for rolling the bowling ball. Each roll hits the same
 	 * number of bats.
