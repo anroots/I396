@@ -7,28 +7,46 @@ public class Calculator {
 	/**
 	 * Ten pin bowling - number of pins
 	 */
-	final int pinsOnField = 10;
-	
+	public static final int PINS_ON_FIELD = 10;
+
 	/**
 	 * Ten pin bowling - number of pins
 	 */
-	final int maxIndex = 9;
+	public static final int NUMBER_OF_FRAMES_IN_GAME = 10;
 
-	//public for testing
-	public ArrayList<Frame> frames;
-	
+	/**
+	 * Holds all the frames (10)
+	 */
+	private ArrayList<Frame> frames = new ArrayList<Frame>();
+
+	private boolean gameIsOver = false;
+
 	/**
 	 * Current Frame Number
 	 */
-	//public for testing
-	public int frameIndex;
-	
-	public Calculator() {
-		frames = new ArrayList<Frame>();
-		frames.add(new Frame());
-		frameIndex = 0;
+	private int frameIndex = 0;
+
+	public ArrayList<Frame> getFrames() {
+		return frames;
 	}
-	
+
+	public int getFrameIndex() {
+		return frameIndex;
+	}
+
+	public int setFrameIndex(int frameIndex) {
+		this.frameIndex = frameIndex;
+		return frameIndex;
+	}
+
+	private boolean isGameOver() {
+		return gameIsOver;
+	}
+
+	public Calculator() {
+		frames.add(new Frame());
+	}
+
 	public int getScore() {
 		int score = 0;
 		for (Frame frame : frames) {
@@ -36,99 +54,106 @@ public class Calculator {
 		}
 		return score;
 	}
-	
-	public void hit(int hit) {
-		if (frameIndex > maxIndex) {
+
+	public void hit(int hit) throws GameOverException {
+
+		if (isGameOver()) {
+			throw new GameOverException();
+		}
+
+		if (currentFrameIsLastFrame()) {
 			addFinalBonus(hit);
+			gameIsOver = true;
 			return;
 		}
-		
-		Frame currentFrame = frames.get(frameIndex);
+
+		Frame currentFrame = frames.get(getFrameIndex());
+
 		if (currentFrame.canHitMore()) {
 			currentFrame.hit(hit);
-		}
-		else if (++frameIndex < 10) {
+		} else if (setFrameIndex(getFrameIndex() + 1) < NUMBER_OF_FRAMES_IN_GAME) {
 			Frame newFrame = new Frame();
 			newFrame.hit(hit);
 			frames.add(newFrame);
 		}
-		
+
 		addSpareBonus(hit);
 		addStrikeBonus(hit, 0);
 	}
-	
-	private void addFinalBonus(int hit) {
-		int diff = frameIndex - maxIndex;
-		if (diff < 2) {
-			frames.get(frameIndex - 1).addBonus(hit);
-			frameIndex++;
+
+	public boolean currentFrameIsLastFrame() {
+		return getFrameIndex() >= NUMBER_OF_FRAMES_IN_GAME;
+	}
+
+	private void addFinalBonus(int hit) throws GameOverException {
+		if (isGameOver()) {
+			throw new GameOverException();
 		}
-		else throw new IllegalStateException();
+
+		frames.get(getFrameIndex() - 1).addBonus(hit);
+		setFrameIndex(getFrameIndex() + 1);
 	}
 
 	private void addSpareBonus(int hit) {
-		if (frameIndex == 0) {
+		if (getFrameIndex() == 0) {
 			return;
 		}
-		Frame frame = frames.get(frameIndex - 1);
+
+		Frame frame = frames.get(getFrameIndex() - 1);
+
 		if (frame.isSpare() && frame.getBonus() == 0) {
 			frame.addBonus(hit);
 		}
-		
 	}
-	
+
 	private void addStrikeBonus(int hit, int offset) {
-		if (frameIndex - offset == 0) {
+
+		if (getFrameIndex() - offset == 0) {
 			return;
 		}
+
 		if (offset > 1) {
 			return;
 		}
-		Frame frame = frames.get(frameIndex - offset - 1);
-		
+
+		Frame frame = frames.get(getFrameIndex() - offset - 1);
+
 		if (!frame.isStrike()) {
 			return;
 		}
-		
+
 		if (frame.getBonus() == 0) {
 			addStrikeBonus(hit, ++offset);
 		}
+
 		frame.addBonus(hit);
 	}
-	
-	//public for testing
+
+	// public for testing
 	public class Frame {
-		
-		private int hit1;
-		private int hit2;
-		private int bonus;
-		
-		public Frame() {
-			hit1 = 0;
-			hit2 = 0;
-			bonus = 0;
-		}
-		
+
+		private int hit1 = 0;
+		private int hit2 = 0;
+		private int bonus = 0;
+
 		public void hit(int hit) {
 			if (hit1 == 0) {
-				hit1 = hit;	
-			}
-			else if (hit <= pinsOnField - hit1) {
+				hit1 = hit;
+			} else if (hit <= PINS_ON_FIELD - hit1) {
 				hit2 = hit;
-			}
-			else {
+			} else {
 				throw new IllegalStateException();
 			}
 		}
-		
+
 		public void addBonus(int bonus) {
 			this.bonus += bonus;
 		}
-		
+
 		public int getBonus() {
 			return bonus;
 		}
-		
+
 		public boolean canHitMore() {
 			if (hit1 != 0 && hit2 != 0) {
 				return false;
@@ -138,22 +163,36 @@ public class Calculator {
 			}
 			return true;
 		}
-		
+
 		public boolean isStrike() {
-			if (hit1 == pinsOnField) {
-				return true;
-			}
-			return false;
+			return hit1 == PINS_ON_FIELD;
 		}
-		
+
 		public boolean isSpare() {
-			if (hit2 != 0 && hit1 + hit2 == pinsOnField) {
-				return true;
-			}
-			return false;
+			return hit2 != 0 && hit1 + hit2 == PINS_ON_FIELD;
 		}
+
 		public int getScore() {
 			return hit1 + hit2 + bonus;
 		}
+	}
+
+	/**
+	 * 
+	 * GameOverException is a good idea, because this allows the user of the
+	 * class to detect when the game is over. More generic exceptions, like
+	 * IllegalStateException would be fine, too, but GameOverException adds more
+	 * specifics as to why this happened.
+	 * 
+	 * New game can be started by creating a new instance or using a reset
+	 * method.
+	 * 
+	 */
+	public class GameOverException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6155891011832751159L;
 	}
 }
