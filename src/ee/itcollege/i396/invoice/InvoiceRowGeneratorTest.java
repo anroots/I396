@@ -9,7 +9,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.laughingpanda.beaninject.Inject;
-import static ee.itcollege.i396.invoice.InvoiceRowMatcher.getMatcherForSum;
+import static ee.itcollege.i396.invoice.Util.*;
 
 public class InvoiceRowGeneratorTest {
 
@@ -29,10 +29,9 @@ public class InvoiceRowGeneratorTest {
 		generator.generateRowsFor(10, asDate("2012-02-15"),
 				asDate("2012-04-02"));
 
-		verify(invoiceRowDao, times(2)).save(
-				argThat(getMatcherForSum(new BigDecimal(3))));
+		verify(invoiceRowDao, times(2)).save(withAmount(new BigDecimal(3)));
 		verify(invoiceRowDao)
-				.save(argThat(getMatcherForSum(new BigDecimal(4))));
+				.save(withAmount(new BigDecimal(4)));
 
 		// verify that there are no more calls
 	}
