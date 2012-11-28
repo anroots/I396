@@ -13,12 +13,13 @@ import org.laughingpanda.beaninject.Inject;
 
 public class InvoiceRowGeneratorTest {
 
+
     @Test
     public void sampleTest() throws Exception {
 
         InvoiceRowDao invoiceRowDao = mock(InvoiceRowDao.class);
 
-        InoviceRowGenerator generator = new InoviceRowGenerator();
+        InvoiceRowGenerator generator = new InvoiceRowGenerator();
 
         Inject.bean(generator).with(invoiceRowDao);
 
