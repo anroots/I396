@@ -8,42 +8,49 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Test;
 import org.laughingpanda.beaninject.Inject;
 
 public class InvoiceRowGeneratorTest {
 
+	private InvoiceRowDao invoiceRowDao;
+	private InvoiceRowGenerator generator;
 
-    @Test
-    public void sampleTest() throws Exception {
+	@Before
+	public void setUp() {
+		invoiceRowDao = mock(InvoiceRowDao.class);
+		generator = new InvoiceRowGenerator();
+		Inject.bean(generator).with(invoiceRowDao);
+	}
 
-        InvoiceRowDao invoiceRowDao = mock(InvoiceRowDao.class);
+	@Test
+	public void sampleTest() throws Exception {
 
-        InvoiceRowGenerator generator = new InvoiceRowGenerator();
+		generator.generateRowsFor(10, asDate("2012-02-15"),
+				asDate("2012-04-02"));
 
-        Inject.bean(generator).with(invoiceRowDao);
+		verify(invoiceRowDao, times(2)).save(
+				argThat(getMatcherForSum(new BigDecimal(3))));
+		verify(invoiceRowDao)
+				.save(argThat(getMatcherForSum(new BigDecimal(4))));
 
-        generator.generateRowsFor(10, asDate("2012-02-15"), asDate("2012-04-02"));
+		// verify that there are no more calls
+	}
 
-        verify(invoiceRowDao, times(2)).save(argThat(getMatcherForSum(new BigDecimal(3))));
-        verify(invoiceRowDao).save(argThat(getMatcherForSum(new BigDecimal(4))));
+	private Matcher<InvoiceRow> getMatcherForSum(BigDecimal bigDecimal) {
 
-        // verify that there are no more calls
-    }
+		// create matcher
 
-    private Matcher<InvoiceRow> getMatcherForSum(BigDecimal bigDecimal) {
+		return null;
+	}
 
-        // create matcher
-
-        return null;
-    }
-
-    public static Date asDate(String date) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	public static Date asDate(String date) {
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

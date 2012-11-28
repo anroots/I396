@@ -12,4 +12,14 @@ class InvoiceRow {
         this.amount = amount;
         this.date = date;
     }
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+    
+    
 }
