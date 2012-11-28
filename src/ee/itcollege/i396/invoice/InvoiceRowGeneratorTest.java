@@ -3,9 +3,6 @@ package ee.itcollege.i396.invoice;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,6 +26,12 @@ public class InvoiceRowGeneratorTest {
 		generator
 				.generateRowsFor(0, asDate("2012-01-01"), asDate("2012-04-01"));
 		verify(invoiceRowDao, never()).save(any(InvoiceRow.class));
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void negativeDateDiffThrows() throws IllegalArgumentException {
+		generator
+				.generateRowsFor(0, asDate("2012-01-01"), asDate("2011-01-01"));
 	}
 
 	@Test
