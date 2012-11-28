@@ -25,6 +25,13 @@ public class InvoiceRowGeneratorTest {
 	}
 
 	@Test
+	public void zeroAmountGeneratesNoInvoices() {
+		generator
+				.generateRowsFor(0, asDate("2012-01-01"), asDate("2012-04-01"));
+		verify(invoiceRowDao, never()).save(any(InvoiceRow.class));
+	}
+
+	@Test
 	@Ignore
 	public void sampleTest() throws Exception {
 
@@ -32,10 +39,9 @@ public class InvoiceRowGeneratorTest {
 				asDate("2012-04-02"));
 
 		verify(invoiceRowDao, times(2)).save(withAmount(new BigDecimal(3)));
-		verify(invoiceRowDao)
-				.save(withAmount(new BigDecimal(4)));
+		verify(invoiceRowDao).save(withAmount(new BigDecimal(4)));
 
 		// Todo: Refactor, verify no further interactions
-		verify(invoiceRowDao,times(3)).save(any(InvoiceRow.class));
+		verify(invoiceRowDao, times(3)).save(any(InvoiceRow.class));
 	}
 }
