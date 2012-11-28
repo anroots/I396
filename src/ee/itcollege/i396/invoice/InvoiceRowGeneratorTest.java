@@ -6,11 +6,10 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.laughingpanda.beaninject.Inject;
+import static ee.itcollege.i396.invoice.InvoiceRowMatcher.getMatcherForSum;
 
 public class InvoiceRowGeneratorTest {
 
@@ -38,12 +37,7 @@ public class InvoiceRowGeneratorTest {
 		// verify that there are no more calls
 	}
 
-	private Matcher<InvoiceRow> getMatcherForSum(BigDecimal bigDecimal) {
-
-		// create matcher
-
-		return null;
-	}
+	
 
 	public static Date asDate(String date) {
 		try {
