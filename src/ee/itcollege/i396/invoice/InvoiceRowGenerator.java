@@ -1,5 +1,6 @@
 package ee.itcollege.i396.invoice;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class InvoiceRowGenerator {
@@ -19,6 +20,12 @@ public class InvoiceRowGenerator {
 			throw new IllegalArgumentException(
 					"Start date cannot be after the end date.");
 		}
+		if (amount == 0) {
+			return;
+		}
+		
+		InvoiceRow row = new InvoiceRow(BigDecimal.valueOf(amount), start);
+		invoiceRowDao.save(row);
 	}
 
 }

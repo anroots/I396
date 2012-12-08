@@ -1,12 +1,18 @@
 package ee.itcollege.i396.invoice;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.laughingpanda.beaninject.Inject;
+import org.mockito.ArgumentCaptor;
+
 import static ee.itcollege.i396.invoice.Util.*;
 
 public class InvoiceRowGeneratorTest {
@@ -26,6 +32,36 @@ public class InvoiceRowGeneratorTest {
 		generator
 				.generateRowsFor(0, asDate("2012-01-01"), asDate("2012-04-01"));
 		verify(invoiceRowDao, never()).save(any(InvoiceRow.class));
+	}
+	
+	@Test
+	public void threeAmountGeneratesOneCorrectInvoice() {
+		ArgumentCaptor<InvoiceRow> rows = ArgumentCaptor.forClass(InvoiceRow.class);
+		
+		Date startDate = asDate("2012-01-01");
+		Date endDate = asDate("2012-04-01");
+		
+		generator
+				.generateRowsFor(3, startDate, endDate);
+		verify(invoiceRowDao).save(rows.capture());
+		
+		assertTrue(rows.getValue().equals(new InvoiceRow(BigDecimal.valueOf(3), startDate)));
+	}
+	
+	@Test
+	public void largerAmountGeneratesCorrectly() {
+		ArgumentCaptor<InvoiceRow> rows = ArgumentCaptor.forClass(InvoiceRow.class);
+		
+		Date startDate = asDate("2012-01-01");
+		Date endDate = asDate("2012-04-01");
+		
+		generator
+				.generateRowsFor(11, startDate, endDate);
+		verify(invoiceRowDao, times(4)).save(rows.capture());
+		
+		List<InvoiceRow> calledRows = rows.getAllValues();
+		
+		// TODO: Finish the test
 	}
 
 	@Test(expected=IllegalArgumentException.class)
