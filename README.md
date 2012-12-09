@@ -1,4 +1,9 @@
-I396
-====
+# I396
 
-IT College coursework
+IT College coursework.
+
+# Team
+
+* Janno Tomingas
+* Aare Roosiväli
+* Ando Roots
