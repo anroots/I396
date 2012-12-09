@@ -27,6 +27,12 @@ public class InvoiceRowGeneratorTest {
 				.generateRowsFor(0, asDate("2012-01-01"), asDate("2012-04-01"));
 		verify(invoiceRowDao, never()).save(any(InvoiceRow.class));
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void negativeAmountThrows() throws IllegalArgumentException{
+		generator
+				.generateRowsFor(-10, asDate("2012-01-01"), asDate("2012-04-01"));
+	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void negativeDateDiffThrows() throws IllegalArgumentException {
