@@ -4,8 +4,6 @@ import org.mockito.ArgumentMatcher;
 
 /**
  * Matcher for two instances of the InvoiceRow class
- * 
- * @author anroots
  */
 class InvoiceRowMatcher extends ArgumentMatcher<InvoiceRow> {
 
